@@ -23,7 +23,6 @@
   }
 
 
-
    function Get_Season_Details($User_Input=array(),$conn)
   {
     $Product_Division = $User_Input['Product_Division'];
@@ -135,6 +134,18 @@
     $Result  = array();
 
     $Sql  =  "SELECT DISTINCT Material_code FROM sales_variety_master WHERE Product_Division = '".$Product_Division."' and Crop_Code = '".$crop_code."' and Variety_Code = '".$actual_item."' and Material_code = '".$hybrid."'";
+    $Sql_Connection =sqlsrv_query($conn,$Sql, array(), array( "Scrollable" => 'static' ));
+    $result = sqlsrv_num_rows($Sql_Connection);
+    return $result;
+  }
+
+  function Get_Distribution_Details($User_Input=array(),$conn)
+  {
+    $Product_Division  = $User_Input['Product_Division'];
+    $Dist_channel_code = $User_Input['Dist_channel_code'];    
+    $Result  = array();
+
+    $Sql  =  "SELECT DISTINCT Code from Master_Distribution WHERE Status = 1 AND Product_Division = '".$Product_Division."' AND Code = '".$Dist_channel_code."'";
     $Sql_Connection =sqlsrv_query($conn,$Sql, array(), array( "Scrollable" => 'static' ));
     $result = sqlsrv_num_rows($Sql_Connection);
     return $result;

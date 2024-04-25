@@ -1,6 +1,6 @@
 <?php
 
-class Transfer_price_details
+class Nrv_details
 {
 
 	public $conn;
@@ -10,7 +10,7 @@ class Transfer_price_details
 		require_once "../Libraries/Excel/PHPExcel.php";
  	}
 	
-	public function transfer_price_save($request)
+	public function nrv_save($request)
 	{
 		$extension 			 = pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION);
 		
@@ -44,7 +44,6 @@ class Transfer_price_details
 				$data['region']    		  = $val[6];
 				$data['territory']    	  = $val[7];
 				$data['Dist_channel_code']= $val[8];
-
 
 				$business_year_check = Get_Business_Year_Details($data,$db_conn);
 				$season_check        = Get_Season_Details($data,$db_conn);
@@ -88,18 +87,18 @@ class Transfer_price_details
 					$response['message']  = 'Row no '.$row.' distribution channel code is Invalid.Please enter valid distribution channel code.';
 					return $response; 
 				} else {
-					$exist_query = "SELECT * FROM Territory_Transfer_Price WHERE product_division = '".$val[0]."' AND business_year = '".$val[1]."' AND season_code = '".$val[2]."' AND crop = '".$val[3]."' AND zone = '".$val[5]."' AND region = '".$val[6]."' AND territory = '".$val[7]."' AND actual_item = '".$val[4]."' AND Distribution_channel_code = '".$val[8]."'";
+					$exist_query = "SELECT * FROM Territory_NRV WHERE product_division = '".$val[0]."' AND business_year = '".$val[1]."' AND season_code = '".$val[2]."' AND crop = '".$val[3]."' AND zone = '".$val[5]."' AND region = '".$val[6]."' AND territory = '".$val[7]."' AND actual_item = '".$val[4]."' AND Distribution_channel_code = '".$val[8]."'";
 
 					$exist_res = sqlsrv_query($this->conn,$exist_query, array(), array( "Scrollable" => 'static' ));
 					$exist_count = sqlsrv_num_rows($exist_res); 
 
 					if($exist_count == 0) {
-						$query = "INSERT INTO Territory_Transfer_Price (product_division,business_year,season_code,crop,zone,region,territory,actual_item,transfer_price_per_kg,Distribution_channel_code) VALUES ('".$val[0]."','".$val[1]."','".$val[2]."','".$val[3]."','".$val[5]."','".$val[6]."','".$val[7]."','".$val[4]."','".$val[9]."','".$val[8]."')";
-						$message  			 = 'Transfer Price Details created successfully.';
+						$query = "INSERT INTO Territory_NRV (product_division,business_year,season_code,crop,zone,region,territory,actual_item,nrv_value,Distribution_channel_code) VALUES ('".$val[0]."','".$val[1]."','".$val[2]."','".$val[3]."','".$val[5]."','".$val[6]."','".$val[7]."','".$val[4]."','".$val[9]."','".$val[8]."')";
+						$message  			 = 'NRV Value Details created successfully.';
 
 					} else {
-						$query = "UPDATE Territory_Transfer_Price SET transfer_price_per_kg = '".$val[9]."' WHERE product_division = '".$val[0]."' AND business_year = '".$val[1]."' AND season_code = '".$val[2]."' AND crop = '".$val[3]."' AND zone = '".$val[5]."' AND region = '".$val[6]."' AND territory = '".$val[7]."' AND actual_item = '".$val[4]."' AND Distribution_channel_code = '".$val[8]."'";
-						$message  			 = 'Transfer Price Details updated successfully.';
+						$query = "UPDATE Territory_NRV SET nrv_value = '".$val[9]."' WHERE product_division = '".$val[0]."' AND business_year = '".$val[1]."' AND season_code = '".$val[2]."' AND crop = '".$val[3]."' AND zone = '".$val[5]."' AND region = '".$val[6]."' AND territory = '".$val[7]."' AND actual_item = '".$val[4]."' AND Distribution_channel_code = '".$val[8]."'";
+						$message  			 = 'NRV Value Details updated successfully.';
 					}
 					$transfer_price_insertion = sqlsrv_query($this->conn,$query);
 				}

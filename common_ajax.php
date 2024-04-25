@@ -5,11 +5,14 @@ include 'Discount_budget_details.php';
 include 'Transfer_price_details.php';
 include 'Stock_obsolescence_details.php';
 include 'Logistics_details.php';
+include 'Nrv_details.php';
 
 $discount       = new Discount_budget_details($conn);
 $transfer_price = new Transfer_price_details($conn);
 $stock          = new Stock_obsolescence_details($conn);
 $logistics      = new Logistics_details($conn);
+$nrv            = new Nrv_details($conn);
+
 
 if(isset($_POST) && $_POST['Action']){
 	if($_POST['Action'] =='discount_budget_save'){
@@ -24,6 +27,9 @@ if(isset($_POST) && $_POST['Action']){
 	} elseif ($_POST['Action'] =='logistics_save') {
 		$logistics_save = $logistics->logistics_save($_POST);
 		echo json_encode($logistics_save);	
+	} elseif ($_POST['Action'] =='nrv_save') {
+		$nrv_save = $nrv->nrv_save($_POST);
+		echo json_encode($nrv_save);	
 	}
 }
 

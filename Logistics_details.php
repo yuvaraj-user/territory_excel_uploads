@@ -43,6 +43,7 @@ class Logistics_details
 				$data['zone']    		  = $val[5];
 				$data['region']    		  = $val[6];
 				$data['territory']    	  = $val[7];
+				$data['Dist_channel_code']= $val[8];
 
 
 				$business_year_check = Get_Business_Year_Details($data,$db_conn);
@@ -52,6 +53,8 @@ class Logistics_details
 				$region_check        = Get_Region_Details($data,$db_conn);
 				$territory_check     = Get_Territory_Details($data,$db_conn);
 				$actul_item_check    = Get_actual_item_Details($data,$db_conn);
+				$dist_channel_check  = Get_Distribution_Details($data,$db_conn);
+
 
 				if($business_year_check == 0) {
 					$response['status']   = 403;
@@ -81,18 +84,22 @@ class Logistics_details
 					$response['status']   = 403;
 					$response['message']  = 'Row no '.$row.' actual item is Invalid.Please enter valid actual item.';
 					return $response; 
+				} elseif ($dist_channel_check == 0) {
+					$response['status']   = 403;
+					$response['message']  = 'Row no '.$row.' distribution channel code is Invalid.Please enter valid distribution channel code.';
+					return $response; 
 				} else {
-					$exist_query = "SELECT * FROM Territory_Logistics WHERE product_division = '".$val[0]."' AND business_year = '".$val[1]."' AND season_code = '".$val[2]."' AND crop = '".$val[3]."' AND zone = '".$val[5]."' AND region = '".$val[6]."' AND territory = '".$val[7]."' AND actual_item = '".$val[4]."'";
+					$exist_query = "SELECT * FROM Territory_Logistics WHERE product_division = '".$val[0]."' AND business_year = '".$val[1]."' AND season_code = '".$val[2]."' AND crop = '".$val[3]."' AND zone = '".$val[5]."' AND region = '".$val[6]."' AND territory = '".$val[7]."' AND actual_item = '".$val[4]."' AND Distribution_channel_code = '".$val[8]."'";
 
 					$exist_res = sqlsrv_query($this->conn,$exist_query, array(), array( "Scrollable" => 'static' ));
 					$exist_count = sqlsrv_num_rows($exist_res); 
 
 					if($exist_count == 0) {
-						$query = "INSERT INTO Territory_Logistics (product_division,business_year,season_code,crop,zone,region,territory,actual_item,logistics_percentage) VALUES ('".$val[0]."','".$val[1]."','".$val[2]."','".$val[3]."','".$val[5]."','".$val[6]."','".$val[7]."','".$val[4]."','".$val[8]."')";
+						$query = "INSERT INTO Territory_Logistics (product_division,business_year,season_code,crop,zone,region,territory,actual_item,logistics_percentage,Distribution_channel_code) VALUES ('".$val[0]."','".$val[1]."','".$val[2]."','".$val[3]."','".$val[5]."','".$val[6]."','".$val[7]."','".$val[4]."','".$val[9]."','".$val[8]."')";
 						$message  			 = 'Logistics Details created successfully.';
 
 					} else {
-						$query = "UPDATE Territory_Logistics SET logistics_percentage = '".$val[8]."' WHERE product_division = '".$val[0]."' AND business_year = '".$val[1]."' AND season_code = '".$val[2]."' AND crop = '".$val[3]."' AND zone = '".$val[5]."' AND region = '".$val[6]."' AND territory = '".$val[7]."' AND actual_item = '".$val[4]."'";
+						$query = "UPDATE Territory_Logistics SET logistics_percentage = '".$val[9]."' WHERE product_division = '".$val[0]."' AND business_year = '".$val[1]."' AND season_code = '".$val[2]."' AND crop = '".$val[3]."' AND zone = '".$val[5]."' AND region = '".$val[6]."' AND territory = '".$val[7]."' AND actual_item = '".$val[4]."' AND Distribution_channel_code = '".$val[8]."'";
 						$message  			 = 'Logistics Details updated successfully.';
 					}
 					$logistics_insertion = sqlsrv_query($this->conn,$query);
