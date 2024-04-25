@@ -237,6 +237,9 @@ margin-right: -40px;"> --></a> </header>
           <li class="nav-item hidden-float <?=@($cpage=='logistics')?"active":""?>">
             <a class="nav-link" href="logistics.php" role="button">Logistics</a>
           </li>
+          <li class="nav-item hidden-float <?=@($cpage=='nrv_upload')? "active" : "" ?>">
+            <a class="nav-link" href="nrv_upload.php" role="button">NRV</a>
+          </li>
         </ul>
         <!-- End Navbar Toolbar -->
 
